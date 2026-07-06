@@ -26,15 +26,16 @@ df = df.loc[:, [c for c in cols if c in df.columns]].dropna()
 forecast_col = 'Close'
 
 df.fillna(-99999, inplace=True)
-forecast_out = int(math.ceil(0.01 * len(df)))
+forecast_out = int(math.ceil(0.1 * len(df)))
 print(forecast_out)
 df['label'] = df[forecast_col].shift(-forecast_out)
 x = np.array(df.drop(['label'], axis=1))
 
 
 x = preprocessing.scale(x)
-x = x[:-forecast_out]
 x_lately = x[-forecast_out:]
+x = x[:-forecast_out]
+
 # x = x[:-forecast_out+1]
 df.dropna(inplace=True)
 
