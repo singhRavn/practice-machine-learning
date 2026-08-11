@@ -57,3 +57,14 @@ class SVM:
             self.b += self.sv_y[n]
             self.b -= np.sum(self.a * self.sv_y * K[ind[n], sv])
         self.b /= len(self.a)
+
+        if self.kernel == linear_kernel:
+            self.w = np.zeros(n_features)
+            for n in range(len(self.a)):
+                self.w += self.a[n] * self.sv_y[n] * self.sv_X[n]
+        
+        else:
+            self.w = None
+    
+    def project(self, X):
+        pass
