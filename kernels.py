@@ -67,4 +67,13 @@ class SVM:
             self.w = None
     
     def project(self, X):
-        pass
+        if self.w is not None:
+            return np.dot(X, self.w) + self.b
+        else:
+            y_predict = np.zeros(len(X))
+            for i in range(len(X)):
+                s = 0
+                for a, sv_y, sv in zip(self.a, self.sv_y, self.sv_X):
+                    s += a * sv_y * self.kernel(X[i], sv)
+                y_predict[i] = s
+            return y_predict + self.b
