@@ -77,3 +77,21 @@ class SVM:
                     s += a * sv_y * self.kernel(X[i], sv)
                 y_predict[i] = s
             return y_predict + self.b
+    
+    def predict(self, X):
+        return np.sign(self.project(X))
+
+if __name__ == "__main__":
+    import pylab as pl
+
+    def gen_lin_separable_data():
+        mean1 = np.array([0, 2])
+        mean2 = np.array([2, 0])
+        cov = np.array([[0.8, 0.6], [0.6, 0.8]])
+        X1 = np.random.multivariate_normal(mean1, cov, 20)
+        y1 = np.ones(len(X1))
+        X2 = np.random.multivariate_normal(mean2, cov, 20)
+        y2 = -np.ones(len(X2))
+        return X1, y1, X2, y2
+    
+    
