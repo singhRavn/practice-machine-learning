@@ -93,5 +93,23 @@ if __name__ == "__main__":
         X2 = np.random.multivariate_normal(mean2, cov, 20)
         y2 = -np.ones(len(X2))
         return X1, y1, X2, y2
+
+    def gen_non_lin_separable_data():
+        mean1 = np.array([0, 2])
+        mean2 = np.array([2, 0])
+        mean3 = np.array([0, -2])
+        mean4 = np.array([-2, 0])
+        cov = np.array([[0.8, 0.6], [0.6, 0.8]])
+        X1 = np.random.multivariate_normal(mean1, cov, 20)
+        y1 = np.ones(len(X1))
+        X2 = np.random.multivariate_normal(mean2, cov, 20)
+        y2 = -np.ones(len(X2))
+        X3 = np.random.multivariate_normal(mean3, cov, 20)
+        y3 = np.ones(len(X3))
+        X4 = np.random.multivariate_normal(mean4, cov, 20)
+        y4 = -np.ones(len(X4))
+        return X1, y1, X2, y2, X3, y3, X4, y4
     
+    def gen_lin_separable_overlap_data():
+        pass
     
