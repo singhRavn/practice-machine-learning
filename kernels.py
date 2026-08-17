@@ -111,5 +111,15 @@ if __name__ == "__main__":
         return X1, y1, X2, y2, X3, y3, X4, y4
     
     def gen_lin_separable_overlap_data():
-        pass
+        mean1 = np.array([0, 2])
+        mean2 = np.array([2, 0])
+        cov = np.array([[1.5, 1.0], [1.0, 1.5]])
+        X1 = np.random.multivariate_normal(mean1, cov, 20)
+        y1 = np.ones(len(X1))
+        X2 = np.random.multivariate_normal(mean2, cov, 20)
+        y2 = -np.ones(len(X2))
+        return X1, y1, X2, y2
+    
+    # def split_train():
+    #     pass
     
