@@ -120,6 +120,16 @@ if __name__ == "__main__":
         y2 = -np.ones(len(X2))
         return X1, y1, X2, y2
     
-    # def split_train():
+    def split_train(X1,y1,X2,y2):
+        X1_train =  X1[:90]
+        y1_train =  y1[:90]
+        X2_train =  X2[:90]
+        y2_train =  y2[:90]
+        x_test = np.vstack((X1_test,X2_test))
+        y_test = np.hstack((y1_test,y2_test))
+        return X_test, y_test
+    
+    # def plot_margin(X1_train,X2_train, clf):
     #     pass
+
     
