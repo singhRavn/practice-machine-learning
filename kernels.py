@@ -157,6 +157,6 @@ if __name__ == "__main__":
         p1.axis("tight")
         p1.show()
 
-    def plot_counter(X1_train, X2_train, clf):
+    def plot_counter(X1_train, X2_train, cl):
         pass
 
