@@ -129,7 +129,34 @@ if __name__ == "__main__":
         y_test = np.hstack((y1_test,y2_test))
         return X_test, y_test
     
-    # def plot_margin(X1_train,X2_train, clf):
-    #     pass
-
+    def plot_margin(X1_train,X2_train, clf):
+        def f(x,w,b,c=0):
+            #given x, return y such that [x,y] in on the line
+            #w.x + b = c
+            return (-w[0] * x - b + c ) / w[1]
     
+        p1.plot(X1_train[:,0], X1_train[:,1],"ro") 
+        p1.plot(X2_train[:,0], X2_train[:,1],"bo") 
+        p1.scatter(clf.sv[:0], clf.sv[:1],s = 100, c='g') 
+
+        #w.x + b = 0
+        a0 = -4; a1 = f(a0, clf.w, clf.b)
+        b0 = 4; b1 = f(b0, clf.w, clf.b) 
+        p1.plot([a0,b0],[a1,b1], "k")
+
+        #w.x + b = 1
+        a0 = -4; a1 = f(a0, clf.w, clf.b, 1)
+        b0 = 4; b1 = f(b0, clf.w, clf.b, 1) 
+        p1.plot([a0,b0],[a1,b1], "k--")
+
+        #w.x + b = -1
+        a0 = -4; a1 = f(a0, clf.w, clf.b, -1)
+        b0 = 4; b1 = f(b0, clf.w, clf.b, -1) 
+        p1.plot([a0,b0],[a1,b1], "k--")
+
+        p1.axis("tight")
+        p1.show()
+
+    def plot_counter(X1_train, X2_train, clf):
+        pass
+
