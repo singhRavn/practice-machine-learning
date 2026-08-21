@@ -158,5 +158,20 @@ if __name__ == "__main__":
         p1.show()
 
     def plot_counter(X1_train, X2_train, cl):
+        p1.plot(X1_train[:,0], X1_train[:,1], "ro")
+        p1.plot(X2_train[:,0], X2_train[:,1], "bo")
+        p1.scatter(cl.sv[:,0], cl.sv[:,1], s=100, c='g')
+
+        X1, X2 = np.meshgrid(np.arange(-4, 4, 0.05), np.arange(-4, 4, 0.05))
+        x = np.array([X1.ravel(), X2.ravel()]).T
+        z = cl.project(x).reshape(X1.shape)
+        p1.contour(X1, X2, z, [0,0],colors='k',linewidth=1, origin = 'lower')
+        p1.contour(X1, X2, z +1 ,[0,0],colors='grey',linewidth=1, origin = 'lower')
+        p1.contour(X1, X2, z -1 ,[0,0],colors='grey',linewidth=1, origin = 'lower')
+        p1.axis("tight")
+        p1.show()
+
+    def test_linear():
         pass
+        
 
