@@ -192,6 +192,21 @@ if __name__ == "__main__":
             correct = np.sum(y_predict == y_test)
             print("Accuracy: ", correct / len(y_test))
             plot_counter(X_train[y_train==1], X_train[y_train==-1], clf)
+
+        def test_soft():
+            X1,y1,X2,y2 = gen_lin_separable_overlap_data()
+            X_train, y_train = split_train(X1, y1, X2, y2)
+            X_test, y_test = split_test(X1, y1, X2, y2)
+            clf = SVM(C=1.0)
+            clf.fit(X_train, y_train)
+            y_predict = clf.predict(X_test)
+            correct = np.sum(y_predict == y_test)
+            print("Accuracy: ", correct / len(y_test))
+            plot_counter(X_train[y_train==1], X_train[y_train==-1], clf)
+
+        test_linear()
+        test_non_linear()
+        test_soft()
         
 
         
