@@ -21,6 +21,9 @@ labels = kmeans.labels_
 colors = ["g", "r", "c", "b", "k", "y", "m"]
 
 for i in range(len(X)):
-    plt.plot(X[i][0], X[i][1], colors[labels[i]] + 'o')
+    plt.plot(X[i][0], X[i][1], colors[labels[i]] , markersize = 10)
+
+plt.scatter(centroids[:,0], centroids[:,1], marker = 'x', s = 100, linewidths = 5)
+plt.show()
 
 
