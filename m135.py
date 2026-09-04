@@ -37,3 +37,15 @@ Y = np.array(df['survived'])
 
 clf = KMeans(n_clusters=2)
 clf.fit(X)
+
+correct = 0
+for i in range(len(X)):
+    predict_me = np.array(X[i].astype(float))
+    predict_me = predict_me.reshape(-1, len(predict_me))
+    response = clf.predict(predict_me)
+    if response[0] == Y[i]:
+        correct += 1
+
+print(correct/len(X))
+        
+    
