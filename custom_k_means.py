@@ -38,4 +38,6 @@ class K_Means:
 
             if optimized:
                 break
+    def predict(self, data):
+        pass
     
