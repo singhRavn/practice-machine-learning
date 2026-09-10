@@ -39,5 +39,19 @@ class K_Means:
             if optimized:
                 break
     def predict(self, data):
-        pass
-    
+        distances = [np.linalg.norm(data - self.centroids[centroid]) for centroid in self.centroids]
+        classification = distances.index(min(distances))
+        return classification
+
+clf = K_Means()
+clf.fit(X)
+
+for centroid in clf.centroids:
+    plt.scatter(clf.centroids[centroid][0], clf.centroids[centroid][1], marker='o', color='k', s=150, linewidths=5)
+
+for classification in clf.classifications:
+    color = colors[classification]
+    for featureset in clf.classifications[classification]:
+        plt.scatter(featureset[0], featureset[1], marker='x', color=color, s=150, linewidths=5)
+
+plt.show()
