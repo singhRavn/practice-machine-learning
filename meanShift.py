@@ -21,3 +21,8 @@ print("Number of estimated clusters:", n_clusters_)
 colors = 10*["g","r","c","b","k"]   
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')  
+for i in range(len(X)):
+    ax.scatter(X[i][0], X[i][1], 0, c=colors[labels[i]], marker='o')
+ax.scatter(cluster_centers[:,0], cluster_centers[:,1], 0, marker='*', c='k', s=150)
+plt.title('Estimated number of clusters: %d' % n_clusters_)
+plt.show()
