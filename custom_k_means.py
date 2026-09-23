@@ -1,3 +1,6 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
 colors = 10*['r','g','b','c','k','y','m']
 
 class K_Means:
