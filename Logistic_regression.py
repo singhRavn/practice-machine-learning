@@ -1,89 +1,124 @@
 """
-Logistic Regression basics with a simple example.
+Logistic Regression: one step advanced from the basic example.
 
-Logistic regression is used for binary classification problems, where the output
-is usually 0 or 1.
+In the previous version, we trained logistic regression on a small dataset and
+looked at predictions.
 
-Example:
-- Predict whether a student passes an exam based on study hours.
-- Predict whether a customer buys a product based on age and income.
+Now we go one step further:
+- split the data into training and testing sets
+- train the model on training data
+- evaluate it on unseen test data
+- make sample predictions to see how the model behaves
 
-The model learns a relationship between input features and a probability.
-It then converts that probability to a class label using a threshold (usually 0.5).
+This is a more realistic ML workflow.
 """
 
 import numpy as np
+from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 
-# Example dataset:
-# hours_studied -> whether the student passed (1 = passed, 0 = failed)
+# -------------------------------------------------------------------
+# 1) Build a simple binary classification dataset
+# -------------------------------------------------------------------
+# Example: whether a student passes based on study hours
 X = np.array([
-    [1],
-    [2],
-    [3],
-    [4],
-    [5],
-    [6],
-    [7],
-    [8],
-    [9],
-    [10]
+    [1], [2], [3], [4], [5],
+    [6], [7], [8], [9], [10],
+    [11], [12], [13], [14], [15]
 ])
 
-y = np.array([0, 0, 0, 0, 1, 0, 1, 1, 1, 1])
+y = np.array([0, 0, 0, 0, 1,
+              0, 1, 1, 1, 1,
+              1, 1, 1, 1, 1])
 
-# Train the model.
+# -------------------------------------------------------------------
+# 2) Split into train and test sets
+# -------------------------------------------------------------------
+# 80% training and 20% testing
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# -------------------------------------------------------------------
+# 3) Train logistic regression model
+# -------------------------------------------------------------------
 model = LogisticRegression()
-model.fit(X, y)
+model.fit(X_train, y_train)
 
-# Predict on some sample cases.
+# -------------------------------------------------------------------
+# 4) Evaluate the model on unseen test data
+# -------------------------------------------------------------------
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Logistic Regression (Advanced Example)")
+print("-----------------------------------")
+print(f"Train size: {len(X_train)}")
+print(f"Test size: {len(X_test)}")
+print(f"Accuracy: {accuracy:.2f}")
+
+# -------------------------------------------------------------------
+# 5) Sample predictions for new cases
+# -------------------------------------------------------------------
 sample_cases = np.array([
     [2],
     [5],
     [8],
-    [10]
+    [12]
 ])
 
-predictions = model.predict(sample_cases)
+predicted_labels = model.predict(sample_cases)
 probabilities = model.predict_proba(sample_cases)
 
-print("Logistic Regression Example")
-for i, value in enumerate(sample_cases):
-    hours = value[0]
-    prediction = predictions[i]
-    prob = probabilities[i]
-    prob_yes = round(prob[1], 3)
-    prob_no = round(prob[0], 3)
+for i, case in enumerate(sample_cases):
+    hours = case[0]
+    label = "Pass" if predicted_labels[i] == 1 else "Fail"
+    p_pass = round(probabilities[i][1], 3)
+    p_fail = round(probabilities[i][0], 3)
+    print(f"Study hours = {hours} -> Prediction: {label} | P(pass)={p_pass}, P(fail)={p_fail}")
 
-    label = "Pass" if prediction == 1 else "Fail"
-    print(f"Study hours: {hours} -> Prediction: {label} (P(pass)={prob_yes}, P(fail)={prob_no})")
-
+# -------------------------------------------------------------------
+# 6) Another example with two input features
+# -------------------------------------------------------------------
+# Here, the model uses age and income to decide whether a customer buys.
 X_2d = np.array([
-    [1, 30],
-    [2, 35],
-    [3, 40],
-    [4, 45],
-    [5, 50],
-    [6, 60],
-    [7, 70],
-    [8, 75]
+    [20, 2000],
+    [25, 2500],
+    [30, 3000],
+    [35, 4500],
+    [40, 5000],
+    [45, 6000],
+    [50, 7000],
+    [55, 8000]
 ])
 
 y_2d = np.array([0, 0, 0, 1, 1, 1, 1, 1])
 
-model_2d = LogisticRegression()
-model_2d.fit(X_2d, y_2d)
+X2_train, X2_test, y2_train, y2_test = train_test_split(
+    X_2d, y_2d, test_size=0.25, random_state=42
+)
 
-# Sample cases to test.
+model_2d = LogisticRegression()
+model_2d.fit(X2_train, y2_train)
+
 new_cases = np.array([
-    [2, 40],
-    [5, 55],
-    [7, 80]
+    [28, 2600],
+    [41, 5200],
+    [60, 8500]
 ])
 
-print("Multiple-feature sample cases")
+print("\nSecond example: customer purchase prediction")
 for case in new_cases:
-    pred = model_2d.predict([case])[0]
-    prob = model_2d.predict_proba([case])[0]
-    print(f"Input: {case} -> Prediction: {'Yes' if pred == 1 else 'No'} | Probabilities: {np.round(prob, 3)}")
+    prediction = model_2d.predict([case])[0]
+    probability = model_2d.predict_proba([case])[0]
+    label = "Buy" if prediction == 1 else "No Buy"
+    print(f"Input = {case} -> {label} | Probabilities = {np.round(probability, 3)}")
+
+# -------------------------------------------------------------------
+# 7) What this shows
+# -------------------------------------------------------------------
+# Logistic regression gives a probability for each class and then chooses
+# the most likely class using a decision threshold (usually 0.5). It works
+# well for binary classification problems.
 
