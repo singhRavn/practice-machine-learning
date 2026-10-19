@@ -1,10 +1,8 @@
-
 import numpy as np
 
 
 n_states = 9
 n_actions = 4
-
 Q = np.zeros((n_states, n_actions))
 
 rewards = np.array([
@@ -19,16 +17,16 @@ terminal_states = {4, 8}
 def next_state(state, action):
     row, col = divmod(state, 3)
 
-    if action == 0:      
+    if action == 0:
         new_row = max(0, row - 1)
         new_col = col
-    elif action == 1:    
+    elif action == 1:
         new_row = row
         new_col = min(2, col + 1)
-    elif action == 2:    
+    elif action == 2:
         new_row = min(2, row + 1)
         new_col = col
-    else:                
+    else:
         new_row = row
         new_col = max(0, col - 1)
 
@@ -66,10 +64,9 @@ print(Q)
 
 print("\nBest action for each state:")
 for s in range(n_states):
-    best_action = np.argmax(Q[s])
-    print(f"State {s} -> action {best_action}")
+    print(f"State {s}: action {np.argmax(Q[s])}")
 
-print("\nSample policy rollouts:")
+print("\nPolicy rollouts:")
 for start in [0, 1, 2, 3]:
     state = start
     route = [state]
@@ -80,5 +77,9 @@ for start in [0, 1, 2, 3]:
         route.append(state)
 
     print(f"Start {start}: {route}")
+
+print("\nAverage reward estimate:")
+values = [np.max(Q[s]) for s in range(n_states)]
+print(sum(values) / len(values))
 
 
