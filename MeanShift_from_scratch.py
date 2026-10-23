@@ -42,7 +42,8 @@ def mean_shift_dynamic_bandwidth(X, bandwidth_factor=1.5, max_iters=100, tol=1e-
 
         for i in range(n_samples):
             distances = np.linalg.norm(X - centroids[i], axis=1)
-            local_bandwidth = bandwidth_factor * np.median(distances[distances > 0]) if np.any(distances > 0) else bandwidth_factor
+            positive_distances = distances[distances > 0]
+            local_bandwidth = bandwidth_factor * np.median(positive_distances) if len(positive_distances) > 0 else bandwidth_factor
             weights = gaussian_kernel(distances, local_bandwidth)
             weights_sum = weights.sum()
 
@@ -60,6 +61,14 @@ def mean_shift_dynamic_bandwidth(X, bandwidth_factor=1.5, max_iters=100, tol=1e-
     return centroids
 
 
+def unique_modes(centroids, tolerance=1e-2):
+    unique = []
+    for center in centroids:
+        if not any(np.linalg.norm(center - existing) < tolerance for existing in unique):
+            unique.append(center)
+    return np.array(unique)
+
+
 X = np.array([
     [1, 2], [1.5, 1.8], [2, 2.2],
     [8, 8], [8.5, 8.1], [9, 8.5],
@@ -69,8 +78,19 @@ X = np.array([
 centers_fixed = mean_shift(X, bandwidth=1.5)
 centers_dynamic = mean_shift_dynamic_bandwidth(X, bandwidth_factor=1.5)
 
+fixed_modes = unique_modes(centers_fixed)
+dynamic_modes = unique_modes(centers_dynamic)
+
 print("Fixed bandwidth centers:")
 print(centers_fixed)
+print("Unique fixed modes:")
+print(fixed_modes)
 
 print("\nDynamic bandwidth centers:")
 print(centers_dynamic)
+print("Unique dynamic modes:")
+print(dynamic_modes)
+
+print("\nMode comparison:")
+print(f"Fixed: {len(fixed_modes)} modes")
+print(f"Dynamic: {len(dynamic_modes)} modes")
