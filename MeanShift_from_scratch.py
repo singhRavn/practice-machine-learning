@@ -69,6 +69,14 @@ def unique_modes(centroids, tolerance=1e-2):
     return np.array(unique)
 
 
+def assign_to_modes(points, modes):
+    labels = []
+    for point in points:
+        distances = np.linalg.norm(modes - point, axis=1)
+        labels.append(int(np.argmin(distances)))
+    return labels
+
+
 X = np.array([
     [1, 2], [1.5, 1.8], [2, 2.2],
     [8, 8], [8.5, 8.1], [9, 8.5],
@@ -81,15 +89,22 @@ centers_dynamic = mean_shift_dynamic_bandwidth(X, bandwidth_factor=1.5)
 fixed_modes = unique_modes(centers_fixed)
 dynamic_modes = unique_modes(centers_dynamic)
 
+fixed_labels = assign_to_modes(X, fixed_modes)
+dynamic_labels = assign_to_modes(X, dynamic_modes)
+
 print("Fixed bandwidth centers:")
 print(centers_fixed)
 print("Unique fixed modes:")
 print(fixed_modes)
+print("Fixed cluster labels:")
+print(fixed_labels)
 
 print("\nDynamic bandwidth centers:")
 print(centers_dynamic)
 print("Unique dynamic modes:")
 print(dynamic_modes)
+print("Dynamic cluster labels:")
+print(dynamic_labels)
 
 print("\nMode comparison:")
 print(f"Fixed: {len(fixed_modes)} modes")
