@@ -53,7 +53,6 @@ def mean_shift_adaptive(X, k=5, max_iters=100, tol=1e-4):
     X = np.asarray(X, dtype=float)
     n_samples = X.shape[0]
     centroids = X.copy()
-    bandwidth = estimate_bandwidth(X, k)
 
     for _ in range(max_iters):
         new_centroids = np.zeros_like(centroids)
@@ -113,7 +112,9 @@ X = np.array([
     [7.8, 8.2], [7.5, 7.9], [8.3, 7.5]
 ])
 
-fixed_centers = mean_shift(X, bandwidth=1.5)
+global_bandwidth = estimate_bandwidth(X, k=5)
+
+fixed_centers = mean_shift(X, bandwidth=global_bandwidth)
 adaptive_centers = mean_shift_adaptive(X, k=5)
 
 fixed_modes = merge_modes(fixed_centers)
@@ -122,7 +123,7 @@ adaptive_modes = merge_modes(adaptive_centers)
 fixed_labels = assign_to_modes(X, fixed_modes)
 adaptive_labels = assign_to_modes(X, adaptive_modes)
 
-print("Estimated global bandwidth:", estimate_bandwidth(X, k=5))
+print("Estimated global bandwidth:", global_bandwidth)
 print("\nFixed bandwidth centers:")
 print(fixed_centers)
 print("Merged fixed modes:")
