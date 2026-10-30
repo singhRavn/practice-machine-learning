@@ -104,6 +104,23 @@ def assign_to_modes(points, modes):
     return np.array(labels)
 
 
+def cluster_spread(points, labels, modes):
+    points = np.asarray(points, dtype=float)
+    labels = np.asarray(labels, dtype=int)
+    modes = np.asarray(modes, dtype=float)
+    spreads = []
+
+    for cluster_id in range(len(modes)):
+        cluster_points = points[labels == cluster_id]
+        if len(cluster_points) == 0:
+            spreads.append(0.0)
+        else:
+            dists = np.linalg.norm(cluster_points - modes[cluster_id], axis=1)
+            spreads.append(float(np.mean(dists)))
+
+    return spreads
+
+
 X = np.array([
     [1, 2], [1.5, 1.8], [2, 2.2],
     [8, 8], [8.5, 8.1], [9, 8.5],
@@ -123,6 +140,9 @@ adaptive_modes = merge_modes(adaptive_centers)
 fixed_labels = assign_to_modes(X, fixed_modes)
 adaptive_labels = assign_to_modes(X, adaptive_modes)
 
+fixed_spread = cluster_spread(X, fixed_labels, fixed_modes)
+adaptive_spread = cluster_spread(X, adaptive_labels, adaptive_modes)
+
 print("Estimated global bandwidth:", global_bandwidth)
 print("\nFixed bandwidth centers:")
 print(fixed_centers)
@@ -130,6 +150,8 @@ print("Merged fixed modes:")
 print(fixed_modes)
 print("Fixed labels:")
 print(fixed_labels)
+print("Fixed cluster spread:")
+print(fixed_spread)
 
 print("\nAdaptive bandwidth centers:")
 print(adaptive_centers)
@@ -137,6 +159,8 @@ print("Merged adaptive modes:")
 print(adaptive_modes)
 print("Adaptive labels:")
 print(adaptive_labels)
+print("Adaptive cluster spread:")
+print(adaptive_spread)
 
 print("\nSummary:")
 print(f"Fixed modes count: {len(fixed_modes)}")
