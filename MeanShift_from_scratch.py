@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def gaussian_kernel(distance, bandwidth):
@@ -121,6 +122,33 @@ def cluster_spread(points, labels, modes):
     return spreads
 
 
+def predict_cluster(point, modes):
+    point = np.asarray(point, dtype=float)
+    modes = np.asarray(modes, dtype=float)
+    distances = np.linalg.norm(modes - point, axis=1)
+    return int(np.argmin(distances))
+
+
+def plot_clusters(points, modes, labels):
+    plt.figure(figsize=(7, 7))
+    colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple']
+
+    for cluster_id in range(len(modes)):
+        cluster_points = points[labels == cluster_id]
+        if len(cluster_points) == 0:
+            continue
+        plt.scatter(cluster_points[:, 0], cluster_points[:, 1],
+                    color=colors[cluster_id % len(colors)], s=40, alpha=0.8)
+
+    plt.scatter(modes[:, 0], modes[:, 1], color='black', marker='X', s=150, label='Mode')
+    plt.title('Mean Shift Clusters')
+    plt.xlabel('Feature 1')
+    plt.ylabel('Feature 2')
+    plt.legend()
+    plt.grid(True, linestyle='--', alpha=0.4)
+    plt.show()
+
+
 X = np.array([
     [1, 2], [1.5, 1.8], [2, 2.2],
     [8, 8], [8.5, 8.1], [9, 8.5],
@@ -129,8 +157,13 @@ X = np.array([
     [7.8, 8.2], [7.5, 7.9], [8.3, 7.5]
 ])
 
-global_bandwidth = estimate_bandwidth(X, k=5)
+new_points = np.array([
+    [1.2, 2.1],
+    [9.0, 8.7],
+    [3.0, 3.0]
+])
 
+global_bandwidth = estimate_bandwidth(X, k=5)
 fixed_centers = mean_shift(X, bandwidth=global_bandwidth)
 adaptive_centers = mean_shift_adaptive(X, k=5)
 
@@ -139,29 +172,31 @@ adaptive_modes = merge_modes(adaptive_centers)
 
 fixed_labels = assign_to_modes(X, fixed_modes)
 adaptive_labels = assign_to_modes(X, adaptive_modes)
-
 fixed_spread = cluster_spread(X, fixed_labels, fixed_modes)
 adaptive_spread = cluster_spread(X, adaptive_labels, adaptive_modes)
 
 print("Estimated global bandwidth:", global_bandwidth)
-print("\nFixed bandwidth centers:")
-print(fixed_centers)
-print("Merged fixed modes:")
+print("\nFixed modes:")
 print(fixed_modes)
 print("Fixed labels:")
 print(fixed_labels)
 print("Fixed cluster spread:")
 print(fixed_spread)
 
-print("\nAdaptive bandwidth centers:")
-print(adaptive_centers)
-print("Merged adaptive modes:")
+print("\nAdaptive modes:")
 print(adaptive_modes)
 print("Adaptive labels:")
 print(adaptive_labels)
 print("Adaptive cluster spread:")
 print(adaptive_spread)
 
+print("\nPrediction for new points:")
+for point in new_points:
+    cluster_id = predict_cluster(point, adaptive_modes)
+    print(f"Point {point} -> Cluster {cluster_id}")
+
 print("\nSummary:")
 print(f"Fixed modes count: {len(fixed_modes)}")
 print(f"Adaptive modes count: {len(adaptive_modes)}")
+
+plot_clusters(X, adaptive_modes, adaptive_labels)
